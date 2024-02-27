@@ -1,20 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Home } from './screens/home';
+import { SignIn } from './screens/signIn';
+import { GluestackUIProvider } from '@gluestack-ui/themed';
+import { config } from '@gluestack-ui/config';
 
 export default function App() {
+  const Stack = createNativeStackNavigator();
   return (
-    <View style={styles.container}>
-      <Text>Hello world!</Text>
-      <StatusBar style='auto' />
-    </View>
+    <GluestackUIProvider config={config}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#191919',
+            },
+            headerTintColor: '#fff',
+          }}
+        >
+          <Stack.Screen
+            name='Home'
+            component={Home}
+            options={{
+              title: '',
+            }}
+          />
+          <Stack.Screen name='SignIn' component={SignIn} options={{ title: 'Sign In' }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GluestackUIProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
