@@ -16,9 +16,10 @@ import { useState } from 'react';
 import { ActivityIndicator, SafeAreaView, StyleSheet } from 'react-native';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
 
-export const SignIn = ({ navigation }) => {
+export const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
@@ -27,7 +28,6 @@ export const SignIn = ({ navigation }) => {
       return !showState;
     });
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <FormControl
@@ -42,7 +42,7 @@ export const SignIn = ({ navigation }) => {
       >
         <VStack space='xl'>
           <Heading color='$white' lineHeight='$md'>
-            Login
+            Sign Up
           </Heading>
           <VStack space='xs'>
             <Text color='$white' lineHeight='$xs'>
@@ -68,18 +68,24 @@ export const SignIn = ({ navigation }) => {
               </InputSlot>
             </Input>
           </VStack>
+          <VStack space='xs'>
+            <Text color='$white' lineHeight='$xs'>
+              Confirm password
+            </Text>
+            <Input>
+              <InputField
+                type={showPassword ? 'text' : 'password'}
+                color='#fff'
+                onChangeText={(text) => setPassword(text)}
+              />
+              <InputSlot pr='$3' onPress={handleState}>
+                {/* EyeIcon, EyeOffIcon are both imported from 'lucide-react-native' */}
+                <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} color='$darkBlue500' />
+              </InputSlot>
+            </Input>
+          </VStack>
           <Button ml='auto' onPress={() => {}}>
-            <ButtonText color='$white'>Log in</ButtonText>
-          </Button>
-          <Button
-            onPress={() => navigation.navigate('SignUp')}
-            size='md'
-            variant='link'
-            action='primary'
-            isDisabled={false}
-            isFocusVisible={false}
-          >
-            <ButtonText>Create a new account</ButtonText>
+            <ButtonText color='$white'>Sign Up</ButtonText>
           </Button>
         </VStack>
       </FormControl>
