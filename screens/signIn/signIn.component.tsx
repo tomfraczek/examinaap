@@ -13,8 +13,9 @@ import {
   ButtonText,
 } from '@gluestack-ui/themed';
 import { useState } from 'react';
-import { ActivityIndicator, SafeAreaView, StyleSheet } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, SafeAreaView, StyleSheet } from 'react-native';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -28,61 +29,77 @@ export const SignIn = ({ navigation }) => {
     });
   };
 
+  const handleLogInWithEmailAndPassword = async () => {
+    try {
+      setLoading(true);
+      const response = await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <FormControl
-        p='$4'
-        borderWidth='$1'
-        borderRadius='$lg'
-        borderColor='$borderLight300'
-        $dark-borderWidth='$1'
-        $dark-borderRadius='$lg'
-        $dark-borderColor='$borderDark800'
-        width={'90%'}
-      >
-        <VStack space='xl'>
-          <Heading color='$white' lineHeight='$md'>
-            Login
-          </Heading>
-          <VStack space='xs'>
-            <Text color='$white' lineHeight='$xs'>
-              Email
-            </Text>
-            <Input>
-              <InputField type='text' color='#fff' onChangeText={(text) => setEmail(text)} />
-            </Input>
+      <KeyboardAvoidingView style={{ width: '90%' }} behavior='padding'>
+        <FormControl
+          p='$4'
+          borderWidth='$1'
+          borderRadius='$lg'
+          borderColor='$borderLight300'
+          $dark-borderWidth='$1'
+          $dark-borderRadius='$lg'
+          $dark-borderColor='$borderDark800'
+        >
+          <VStack space='xl'>
+            <VStack space='xs'>
+              <Text color='$white' lineHeight='$xs'>
+                Email
+              </Text>
+              <Input>
+                <InputField type='text' color='#fff' onChangeText={(text) => setEmail(text)} />
+              </Input>
+            </VStack>
+            <VStack space='xs'>
+              <Text color='$white' lineHeight='$xs'>
+                Password
+              </Text>
+              <Input>
+                <InputField
+                  type={showPassword ? 'text' : 'password'}
+                  color='#fff'
+                  onChangeText={(text) => setPassword(text)}
+                />
+                <InputSlot pr='$3' onPress={handleState}>
+                  {/* EyeIcon, EyeOffIcon are both imported from 'lucide-react-native' */}
+                  <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} color='$darkBlue500' />
+                </InputSlot>
+              </Input>
+            </VStack>
+
+            {loading ? (
+              <ActivityIndicator size='large' color='#0000ff' />
+            ) : (
+              <>
+                <Button ml='auto' onPress={handleLogInWithEmailAndPassword}>
+                  <ButtonText color='$white'>Log in</ButtonText>
+                </Button>
+                <Button
+                  onPress={() => navigation.navigate('SignUp')}
+                  size='md'
+                  variant='link'
+                  action='primary'
+                  isDisabled={false}
+                  isFocusVisible={false}
+                >
+                  <ButtonText>Create a new account</ButtonText>
+                </Button>
+              </>
+            )}
           </VStack>
-          <VStack space='xs'>
-            <Text color='$white' lineHeight='$xs'>
-              Password
-            </Text>
-            <Input>
-              <InputField
-                type={showPassword ? 'text' : 'password'}
-                color='#fff'
-                onChangeText={(text) => setPassword(text)}
-              />
-              <InputSlot pr='$3' onPress={handleState}>
-                {/* EyeIcon, EyeOffIcon are both imported from 'lucide-react-native' */}
-                <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} color='$darkBlue500' />
-              </InputSlot>
-            </Input>
-          </VStack>
-          <Button ml='auto' onPress={() => {}}>
-            <ButtonText color='$white'>Log in</ButtonText>
-          </Button>
-          <Button
-            onPress={() => navigation.navigate('SignUp')}
-            size='md'
-            variant='link'
-            action='primary'
-            isDisabled={false}
-            isFocusVisible={false}
-          >
-            <ButtonText>Create a new account</ButtonText>
-          </Button>
-        </VStack>
-      </FormControl>
+        </FormControl>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

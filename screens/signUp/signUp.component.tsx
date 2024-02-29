@@ -14,7 +14,8 @@ import {
 } from '@gluestack-ui/themed';
 import { useState } from 'react';
 import { ActivityIndicator, SafeAreaView, StyleSheet } from 'react-native';
-import { FIREBASE_AUTH } from '../../firebaseConfig';
+import { FIREBASE_AUTH as auth } from '../../firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 export const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -22,11 +23,22 @@ export const SignUp = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
   const handleState = () => {
     setShowPassword((showState) => {
       return !showState;
     });
+  };
+
+  const hadleSignUpWithEmail = async () => {
+    try {
+      setLoading(true);
+      const response = await createUserWithEmailAndPassword(auth, email, password);
+      // .then(() => navigation.navigate('signUpSuccess'));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -84,7 +96,7 @@ export const SignUp = ({ navigation }) => {
               </InputSlot>
             </Input>
           </VStack>
-          <Button ml='auto' onPress={() => {}}>
+          <Button ml='auto' onPress={hadleSignUpWithEmail}>
             <ButtonText color='$white'>Sign Up</ButtonText>
           </Button>
         </VStack>
