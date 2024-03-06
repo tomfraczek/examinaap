@@ -1,10 +1,10 @@
 import { SafeAreaView, StyleSheet } from 'react-native';
 
-import { RegisterForm } from '../../components/registerForm';
+import { SignUpForm } from '../../components/signUpForm';
 
 export const SignUp = () => (
   <SafeAreaView style={styles.container}>
-    <RegisterForm />
+    <SignUpForm />
   </SafeAreaView>
 );
 
